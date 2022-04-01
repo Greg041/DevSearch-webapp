@@ -102,3 +102,23 @@ pre.codeblock {
   text-align: center;
   background: var(--color-main);
 }
+
+/*=======================
+
+Fixed Position Alerts Wrapper
+
+========================*/
+
+.alert {
+
+  position: fixed;
+  
+  left: 50%;
+  
+  top: 120px;
+  
+  transform: translate(-50%, -50%);
+  
+  z-index: 99999;
+  
+  }

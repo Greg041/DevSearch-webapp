@@ -15,18 +15,20 @@
             </div>
             {% if project.source_link %}
                 <p>
-                    <a class="singleProject__liveLink" href="#" target="_blank"><i class="im im-external-link"></i>Source Code
+                    <a class="singleProject__liveLink" href="{{ project.source_link }}" target="_blank"><i class="im im-external-link"></i>Source Code
                     </a>
                 </p>
             {% endif %}
+            {% if project.demo_link %}
             <p>
                 <a class="singleProject__liveLink" href="{{ project.demo_link }}" target="_blank"><i class="im im-external-link"></i>Demo link
                 </a>
             </p>
+            {% endif %}
         </div>
         <div class="column column--2of3">
           <img class="singleProject__preview" src="{{ project.featured_image.url }}" alt="portfolio thumbnail" />
-          <a href="#" class="singleProject__developer">Gregori Azuaje</a>
+          <a href="{% url 'user_profile' project.owner.id %}" class="singleProject__developer">Gregori Azuaje</a>
           <h2 class="singleProject__title">{{ project.title }}</h2>
           <h3 class="singleProject__subtitle">About the Project</h3>
           <div class="singleProject__info">
