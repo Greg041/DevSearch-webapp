@@ -1,9 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 import uuid
 
 
 # Create your models here.
+class ProfileQuerySet(models.QuerySet):
+    def get_profiles_by_skills(self, query):
+        skills = Skill.objects.filter(name__icontains=query)
+        return self.filter(skill__in=skills).distinct()
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200, blank=True, null=True)
@@ -20,6 +27,7 @@ class Profile(models.Model):
     personal_website = models.CharField(max_length=200, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+    objects = ProfileQuerySet.as_manager()
 
     def __str__(self):
         return str(self.user.username)

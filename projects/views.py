@@ -1,14 +1,27 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Project, Review
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from .models import Project
 from .forms import ProjectForm
-# Create your views here.
+from .utils import search_projects, paginate_projects
 
+
+# Create your views here.
 def projects(request):
-    projects = Project.objects.all()
-    return render(request, 'projects/projects.html', {
+    if request.GET.get('search'):
+        projects, query = search_projects(request)
+    else:
+        query = ''
+        projects = Project.objects.all().order_by('-created')
+    
+    projects, custom_range = paginate_projects(request, projects, 3)
+
+    context = {
         'projects': projects,
-    })
+        'query': query,
+        'pagination_range': custom_range
+    }
+    return render(request, 'projects/projects.html', context)
 
 
 def single_project(request, pk):
@@ -16,7 +29,7 @@ def single_project(request, pk):
     return render(request, 'projects/single-project.html', {
         'project': project,
     })
-
+ 
 
 @login_required(login_url='login_page')
 def create_project(request):
@@ -33,9 +46,9 @@ def create_project(request):
 
 
 @login_required(login_url='login_page')
-def update_project(request, pk):
+def update_project(request, pk): 
+    project = Project.objects.filter(id=pk).first()
     if request.user == project.owner.user:
-        project = Project.objects.filter(id=pk).first()
         form = ProjectForm(instance=project)
         if request.method == 'POST':
             form = ProjectForm(request.POST, request.FILES, instance=project)
@@ -59,6 +72,6 @@ def delete_project(request, pk):
         context = {
             'object': project
         }
-        return render(request, 'projects/delete-template.html', context)
+        return render(request, 'delete-template.html', context)
     else:
         return redirect('my_account')

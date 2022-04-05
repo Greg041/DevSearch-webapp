@@ -8,11 +8,11 @@
             </div>
     
             <div class="hero-section__search">
-              <form class="form" action="#" method="get">
+              <form class="form" method="GET" action="{% url 'projects' %}" id="searchform">
                 <div class="form__field">
                   <label for="formInput#search">Search By Projects </label>
-                  <input class="input input--text" id="formInput#search" type="text" name="text"
-                    placeholder="Search by Project Title" />
+                  <input class="input input--text" id="formInput#search" type="text" name="search"
+                    placeholder="Search by Project Title" value="{{ query }}"/>
                 </div>
     
                 <input class="btn btn--sub btn--lg" type="submit" value="Search" />
@@ -51,5 +51,8 @@
             </div>
           </div>
         </section>
+        {% if projects.has_other_pages %}
+          {% include "includes/pagination_nav.html" with queryset=projects %}
+        {% endif %}
     </main>
 {% endblock content %}

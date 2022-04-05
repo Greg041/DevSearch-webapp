@@ -2,15 +2,12 @@
 
 {% block content %}
 
-
 <!-- Main Section -->
 <main class="formPage my-xl">
     <div class="content-box">
         <div class="formWrapper">
-
             <br>
-
-            <form class="form" action="" method="POST">
+            <form class="form" method="POST">
                 {% csrf_token %}
                 <p>Are you sure you want to delete "{{object}}"?</p>
 

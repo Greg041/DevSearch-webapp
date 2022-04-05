@@ -10,14 +10,14 @@
         </div>
 
         <div class="hero-section__search">
-          <form class="form" action="#" method="get">
+          <form class="form" action="{% url 'profiles' %}" method="get">
             <div class="form__field">
               <label for="formInput#search">Search Developers </label>
-              <input class="input input--text" id="formInput#search" type="text" name="text"
-                placeholder="Search by developer name" />
+              <input class="input input--text" id="formInput#search" type="text" name="search"
+                placeholder="Search by developer name" value="{{ query }}"/>
             </div>
 
-            <input class="btn btn--sub btn--lg" type="submit" value="Search" />
+            <input class="btn btn--sub btn--lg" type="submit" value="Search"/>
           </form>
         </div>
       </div>
@@ -52,6 +52,9 @@
                 </div>
             {% endfor %}
     </section>
+    {% if profiles.has_other_pages %}
+      {% include "includes/pagination_nav.html" with queryset=profiles %}
+    {% endif %}
 </main>
 {% endblock content %}
 
