@@ -27,13 +27,15 @@
                         <a title="LinkedIn" href="{{ profile.social_linkedin }}" target="_blank"><i class="im im-linkedin"></i></a>
                         </li>
                     {% endif %}
-                    {% if profile.personal_website %}
+                    {% if profile.personal_website %} 
                         <li>
                         <a title="Personal Website" href="{{ profile.personal_website }}" target="_blank"><i class="im im-globe"></i></a>
                         </li>
                     {% endif %}
                 </ul>
-                <a href="#" class="btn btn--sub btn--lg">Send Message </a>
+                {% if request.user.profile.id != profile.id %}
+                    <a href="{% url "send_message" profile.id %}" class="btn btn--sub btn--lg">Send Message </a>
+                {% endif %}
                 </div>
             </div>
             </div>

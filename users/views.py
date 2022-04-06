@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.db.models.aggregates import Count
 from .utils import search_profiles, paginate_profiles
 from .models import Profile, Skill
-from .forms import CustomUserCreationForm, ProfileForm, SkillForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm, SendMessageForm
 
 
 # Create your views here.
@@ -215,3 +215,26 @@ def read_message(request, pk):
     except:
         return redirect('inbox')
     return render(request, 'users/message.html', context)
+
+
+@login_required(login_url='login_page')
+def send_message(request, pk):
+    message_receiver = Profile.objects.get(id=pk)
+    if request.method == 'POST':
+        send_message_form = SendMessageForm(request.POST)
+        if send_message_form.is_valid():
+            message_instance = send_message_form.save(commit=False)
+            message_instance.sender = request.user.profile
+            message_instance.recipient = message_receiver
+            message_instance.save()
+            messages.success(request, "Your message has been sent")
+            return redirect('user_profile', pk=pk)
+    if str(request.user.profile.id) == str(pk):
+        return redirect('user_profile', pk=pk)
+    else:
+        send_message_form = SendMessageForm()
+        context = {
+            'send_message_form': send_message_form,
+            'message_receiver_profile': message_receiver
+        }
+        return render(request, 'users/send-message-form.html', context)
