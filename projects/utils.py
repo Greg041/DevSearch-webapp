@@ -6,7 +6,7 @@ from .models import Project, Tag
 def search_projects(request):
     query = request.GET.get('search')
     tags = Tag.objects.filter(name__icontains=query)
-    projects = Project.objects.distinct().filter(Q(title__icontains=query) | Q(description__icontains=query) | Q(owner__name__icontains=query) | Q(tags__in=tags)).order_by('-created')
+    projects = Project.objects.distinct().filter(Q(title__icontains=query) | Q(description__icontains=query) | Q(owner__name__icontains=query) | Q(tags__in=tags))
     return projects, query 
 
 

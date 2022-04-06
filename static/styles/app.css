@@ -535,11 +535,6 @@ img {
   border-top: 2px solid var(--color-light);
 }
 
-.comments .form label {
-  position: absolute;
-  margin: -9999px;
-}
-
 .commentList {
   margin: 3rem 0;
 }
@@ -846,22 +841,18 @@ img {
   margin-top: 2rem;
 }
 
+
+
 /*=======================
-
-Fixed Position Alerts Wrapper
-
+  Fixed Position Alerts Wrapper
 ========================*/
 
 .alert {
-
   position: fixed;
-  
   left: 50%;
-  
   top: 120px;
-  
   transform: translate(-50%, -50%);
-  
+
+
   z-index: 99999;
-  
-  }
+}

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.contrib import messages
 from .models import Project
-from .forms import ProjectForm
+from .forms import ProjectForm, ReviewForm
 from .utils import search_projects, paginate_projects
 
 
@@ -12,7 +12,7 @@ def projects(request):
         projects, query = search_projects(request)
     else:
         query = ''
-        projects = Project.objects.all().order_by('-created')
+        projects = Project.objects.all()
     
     projects, custom_range = paginate_projects(request, projects, 3)
 
@@ -26,9 +26,28 @@ def projects(request):
 
 def single_project(request, pk):
     project = Project.objects.filter(id=pk).first()
-    return render(request, 'projects/single-project.html', {
+    if request.method == 'POST':
+        review_form = ReviewForm(request.POST)
+        if review_form.is_valid():
+            review = review_form.save(commit=False)
+            review.owner = request.user.profile
+            review.project = project
+            review.save()
+            project.get_votes_total
+            messages.success(request, 'Your review has been successfully submitted')
+            redirect('single_project', pk=project.id)
+        else:
+            context = {
+                'project': project,
+                'review_form': review_form
+            }
+            render(request, 'projects/single-project.html', context)
+    review_form = ReviewForm()
+    context = {
         'project': project,
-    })
+        'review_form': review_form
+    }
+    return render(request, 'projects/single-project.html', context)
  
 
 @login_required(login_url='login_page')

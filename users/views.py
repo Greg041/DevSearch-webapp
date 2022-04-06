@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -43,14 +44,14 @@ def login_user(request):
         return redirect('profiles')
 
     if request.method == "POST":
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
         password = request.POST.get('password')
         user = User.objects.filter(username__iexact=username).first()
         if user:
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('my_account')
+                return redirect(request.GET['next'] if 'next' in request.GET else 'my_account')
             else:
                 messages.error(request, "Username or password incorrect")
         else:
@@ -62,6 +63,7 @@ def login_user(request):
     return render(request, "users/login-register.html", context)
 
 
+@login_required(login_url='login_page')
 def logout_user(request):
     logout(request)
     messages.info(request, "User was logged out")
@@ -185,3 +187,31 @@ def delete_skill(request, pk):
                 'object': skill
             }
             return render(request, 'delete-template.html', context)
+
+
+@login_required(login_url='login_page')
+def inbox(request):
+    profile = request.user.profile
+    recieved_messages = profile.recipient_messages.all()
+    new_messages = recieved_messages.filter(is_read=False).count()
+    context = {
+        'recieved_messages': recieved_messages,
+        'new_messages': new_messages
+    }
+    return render(request, 'users/inbox.html', context)
+
+
+@login_required(login_url='login_page')
+def read_message(request, pk):
+    profile = request.user.profile
+    try:
+        message = profile.recipient_messages.get(id=pk)
+        if not message.is_read:
+            message.is_read = True
+            message.save()
+        context = {
+        'message': message
+    }
+    except:
+        return redirect('inbox')
+    return render(request, 'users/message.html', context)

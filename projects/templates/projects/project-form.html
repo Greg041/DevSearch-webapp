@@ -11,7 +11,7 @@
                     <!-- Input:Text -->
                     {% for field in form %}
                         <div class="form__field">
-                            <label for="formInput{{field.label}}">{{ field.label }}</label>
+                            <label for="formInput{{ field.label }}">{{ field.label }}</label>
                             {{ field }}
                         </div>
                     {% endfor %}
