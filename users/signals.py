@@ -1,3 +1,5 @@
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import Profile
 
 
@@ -10,6 +12,14 @@ def create_profile(sender, instance, created, **kwargs):
             email = user.email,
             name = user.first_name
         )
+
+        send_mail(
+            'Welcome', 
+            """Welcome to devsearch project, we hope this platform helps you making your work
+            recognized bu other people""",
+            settings.EMAIL_HOST_USER,
+            [user.email], 
+            fail_silently=False)
 
 
 """The sender will be a profile instance with which will be updated the user instance
