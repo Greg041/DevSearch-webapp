@@ -27,9 +27,11 @@ def vote_and_review_project_api_view(request, pk):
     user = request.user.profile
     review, created = Review.objects.get_or_create(owner=user, project=project)
 
-    if request.data.get('value'):
+    if user == project.owner:
+        return Response({'error': "You can't vote your own project"})
+    elif request.data.get('value'):
         review.value = request.data['value']
-        review.body = request.data['body'] if request.data.get('value') else ''
+        review.body = request.data['body'] if request.data.get('body') else ''
         review.save()
         project.get_votes_total
         project_serialized = ProjectSerializer(project)
