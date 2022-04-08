@@ -7,7 +7,7 @@
             <div class="column column--1of3">
             <div class="card text-center">
                 <div class="card__body dev">
-                <img class="avatar avatar--xl" src="{{ profile.profile_image.url }}" />
+                <img class="avatar avatar--xl" src="{{ profile.get_image_url }}" />
                 <h2 class="dev__name">{{ profile.name }}</h2>
                 {% if profile.short_intro %}
                     <p class="dev__title">{{ profile.short_intro }}</p>
@@ -78,28 +78,30 @@
                     <h3 class="devInfo__title">Projects</h3>
                     <div class="grid grid--two">
                         {% for project in profile.project_set.all %}
-                            <div class="column">
-                                <div class="card project">
-                                    <a href="{% url "single_project" project.id %}" class="project">
-                                        <img class="project__thumbnail" src="{{ project.featured_image.url }}" alt="project thumbnail" />
-                                        <div class="card__body">
-                                            <h3 class="project__title">{{ project.title }}</h3>
-                                            <p><a class="project__author" href="{% url 'user_profile' profile.id %}">By {{ profile.name }}</a></p>
-                                            <p class="project--rating">
-                                                <span style="font-weight: bold;">{{ project.vote_ratio }}%</span> Postitive
-                                                Feedback ({{ project.vote_total }} Vote{{ project.vote_total|pluralize:"s" }})
-                                            </p>
-                                            <div class="project__tags">
-                                                {% for tag in project.tags.all %}
-                                                    <span class="tag tag--pill tag--main">
-                                                        <small>{{ tag }}</small>
-                                                    </span>
-                                                {% endfor %}
-                                            </div>
+                            {% if project.get_image_url %}
+                                <div class="column">
+                                        <div class="card project">
+                                            <a href="{% url "single_project" project.id %}" class="project">
+                                                <img class="project__thumbnail" src="{{ project.get_image_url }}" alt="project thumbnail" />
+                                                <div class="card__body">
+                                                    <h3 class="project__title">{{ project.title }}</h3>
+                                                    <p><a class="project__author" href="{% url 'user_profile' profile.id %}">By {{ profile.name }}</a></p>
+                                                    <p class="project--rating">
+                                                        <span style="font-weight: bold;">{{ project.vote_ratio }}%</span> Postitive
+                                                        Feedback ({{ project.vote_total }} Vote{{ project.vote_total|pluralize:"s" }})
+                                                    </p>
+                                                    <div class="project__tags">
+                                                        {% for tag in project.tags.all %}
+                                                            <span class="tag tag--pill tag--main">
+                                                                <small>{{ tag }}</small>
+                                                            </span>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </a>
                                         </div>
-                                    </a>
                                 </div>
-                            </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>

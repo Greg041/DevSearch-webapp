@@ -10,7 +10,7 @@
           <div class="card text-center">
             <div class="card__body dev">
               <a class="tag tag--pill tag--main settings__btn" href="{% url 'edit_profile' %}"><i class="im im-edit"></i> Edit</a>
-              <img class="avatar avatar--xl dev__avatar" src="{{ profile.profile_image.url }}" />
+              <img class="avatar avatar--xl dev__avatar" src="{{ profile.get_image_url }}" />
               <h2 class="dev__name">{{ profile.name }}</h2>
               {% if profile.short_intro %}
               <p class="dev__title">{{ profile.short_intro }}</p>{% endif %}
@@ -81,7 +81,7 @@
             {% for project in profile.project_set.all %}
               <tr>
                 <td class="settings__thumbnail">
-                  <a href="{% url 'single_project' project.id %}"><img src="{{ project.featured_image.url }}" alt="Project Thumbnail" /></a>
+                  <a href="{% url 'single_project' project.id %}"><img src="{{ project.get_image_url }}" alt="Project Thumbnail" /></a>
                 </td>
                 <td class="settings__tableInfo">
                   <a href="{% url 'single_project' project.id %}">{{ project.title }}</a>

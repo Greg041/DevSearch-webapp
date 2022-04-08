@@ -32,6 +32,14 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user.username)
 
+    @property
+    def get_image_url(self):
+        try:
+            image_url = self.profile_image.url
+        except:
+            image_url = ''
+        return image_url
+
 
 class Skill(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)

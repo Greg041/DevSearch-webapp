@@ -11,7 +11,7 @@ class Tag(models.Model):
 
 
 class Project(models.Model):
-    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
+    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     featured_image = models.ImageField(null=True, blank=True, default="images/default.jpg", upload_to='images/')
@@ -21,6 +21,9 @@ class Project(models.Model):
     vote_total = models.IntegerField(default=0, null=True, blank=True)
     vote_ratio = models.IntegerField(default=0, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-vote_ratio', '-vote_total', '-created']
 
     def __str__(self):
         return self.title
@@ -38,8 +41,14 @@ class Project(models.Model):
         reviewers_id = self.review_set.all().values_list('owner__id', flat=True)
         return reviewers_id
 
-    class Meta:
-        ordering = ['-vote_ratio', '-vote_total', '-created']
+    @property
+    def get_image_url(self):
+        try:
+            image_url = self.featured_image.url
+        except:
+            image_url = ''
+        return image_url
+    
 
 
 class Review(models.Model):

@@ -15,6 +15,17 @@
                             {{ field }}
                         </div>
                     {% endfor %}
+                    <h3>Tags</h3>
+                    <div class="form__field form__field--checkbox">
+                        {% for tag in tags %}
+                            {% if tag in project.tags.all %}
+                                <input type="checkbox" id="{{ tag.name }}" value="{{ tag.name }}" name="{{ tag.name }}" class="input input--checkbox" checked="True"/>
+                            {% else %}
+                                <input type="checkbox" id="{{ tag.name }}" value="{{ tag.name }}" name="{{ tag.name }}" class="input input--checkbox"/>
+                            {% endif %}
+                            <label for="{{ tag.name }}">{{ tag.name }}</label>
+                        {% endfor %}
+                    </div>
                     <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
                 </form>
             </div>

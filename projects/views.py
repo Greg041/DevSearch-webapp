@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Project
+from .models import Project, Tag
 from .forms import ProjectForm, ReviewForm
 from .utils import search_projects, paginate_projects
 
@@ -12,10 +12,9 @@ def projects(request):
         projects, query = search_projects(request)
     else:
         query = ''
-        projects = Project.objects.all()
-    
+        projects = Project.objects.exclude(featured_image='')
+        
     projects, custom_range = paginate_projects(request, projects, 3)
-
     context = {
         'projects': projects,
         'query': query,
@@ -59,8 +58,15 @@ def create_project(request):
             project = form.save(commit=False)
             project.owner = request.user.profile
             project.save()
+            tags = Tag.objects.filter(name__in=request.POST.keys())
+            project.tags.add(*tags)
             return redirect('projects')
-    context = {'form': form}
+    user_skills = request.user.profile.skill_set.all().values_list('name', flat=True)
+    tags_available = Tag.objects.filter(name__in=user_skills)
+    context = {
+        'form': form,
+        'tags': tags_available
+        }
     return render(request, 'projects/project-form.html', context)
 
 
@@ -73,8 +79,17 @@ def update_project(request, pk):
             form = ProjectForm(request.POST, request.FILES, instance=project)
             if form.is_valid():
                 form.save()
-                return redirect('projects')
-        context = {'form': form}
+                project.tags.clear()
+                tags = Tag.objects.filter(name__in=request.POST.keys())
+                project.tags.add(*tags)
+                return redirect('my_account')
+        user_skills = request.user.profile.skill_set.all().values_list('name', flat=True)
+        tags_available = Tag.objects.filter(name__in=user_skills)
+        context = {
+            'project': project,
+            'form': form,
+            'tags': tags_available
+            }
         return render(request, 'projects/project-form.html', context)
     else:
         return redirect('my_account')

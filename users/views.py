@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.db.models.aggregates import Count
 from .utils import search_profiles, paginate_profiles
 from .models import Profile, Skill
+from projects.models import Tag
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm, SendMessageForm
 
 
@@ -16,7 +17,7 @@ def profiles(request):
         profiles, query = search_profiles(request)
     else:
         query = ''
-        profiles = Profile.objects.all().annotate(projects_number=Count('project')).order_by('-projects_number')
+        profiles = Profile.objects.all().exclude(profile_image='').annotate(projects_number=Count('project')).order_by('-projects_number')
     profiles, custom_range = paginate_profiles(request, profiles, 3)
     context = {
         'profiles': profiles,
@@ -128,8 +129,9 @@ def add_skill(request):
         if form.is_valid():
             skill = form.save(commit=False)
             skill.owner = request.user.profile
-            skill.name = skill.name.capitalize()
+            skill.name = skill.name.upper()
             skill.save()
+            Tag.objects.get_or_create(name=skill.name)  # Creating a tag for the skill if doesn't exist one to reflect it when creating a project
             messages.success(request, "Skill was added successfully!")
             return redirect('my_account')
         else:
@@ -155,7 +157,9 @@ def edit_skill(request, pk):
             if form.is_valid():
                 skill = form.save(commit=False)
                 skill.owner = request.user.profile
+                skill.name = skill.name.upper()
                 skill.save()
+                Tag.objects.get_or_create(name=skill.name)  # Creating a tag for the skill if doesn't exist one to reflect it when creating a project
                 messages.success(request, "Skill was updated successfully!")
                 return redirect('my_account')
             else:

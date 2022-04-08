@@ -27,8 +27,8 @@
                 {% for project in projects %}
                     <div class="column">
                         <div class="card project">
-                        <a href="{% url 'single_project' project.id %}" class="project">
-                            <img class="project__thumbnail" src="{{ project.featured_image.url }}" alt="project thumbnail" />
+                          <a href="{% url 'single_project' project.id %}" class="project">
+                            <img class="project__thumbnail" src="{{ project.get_image_url }}" alt="project thumbnail" />
                             <div class="card__body">
                                 <h3 class="project__title">{{ project.title }}</h3>
                                 <p><a class="project__author" href="{% url 'user_profile' project.owner.id %}">{{ project.owner.name }}</a></p>
@@ -44,7 +44,7 @@
                                     {% endfor %}
                                 </div>
                             </div>
-                        </a>
+                          </a>
                         </div>
                     </div>
                 {% endfor %}
