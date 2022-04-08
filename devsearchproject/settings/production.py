@@ -4,7 +4,7 @@ import cloudinary_storage
 import django_heroku
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': getenv('CLOUD_NAME'),
