@@ -43,6 +43,8 @@
 
             {% if request.user.profile.id in project.reviewers_list %}
               <p>You already submit a review for this project</p>
+            {% elif request.user.profile.id == project.owner.id %}
+              <p>You can't submit a review in your own project</p>
             {% elif request.user.is_authenticated %}
               <form class="form" action="{% url 'single_project' project.id %}" method="POST">
                 {% csrf_token %}
