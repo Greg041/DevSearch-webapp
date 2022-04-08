@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import Profile
+import uuid
 
 # Create your models here.
 class Tag(models.Model):
@@ -21,6 +22,7 @@ class Project(models.Model):
     vote_total = models.IntegerField(default=0, null=True, blank=True)
     vote_ratio = models.IntegerField(default=0, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
 
     class Meta:
         ordering = ['-vote_ratio', '-vote_total', '-created']
@@ -61,6 +63,7 @@ class Review(models.Model):
     body = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
     created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
 
     class Meta:
         unique_together = [['owner', 'project'] ]

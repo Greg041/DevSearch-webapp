@@ -3,8 +3,8 @@ from .views import projects, single_project, create_project, update_project, del
 
 urlpatterns = [
     path('', projects, name="projects"),
-    path('projects/<int:pk>', single_project, name="single_project"),
+    path('projects/<str:pk>', single_project, name="single_project"),
     path('create-project/', create_project, name="create_project"),
-    path('update-project/<int:pk>/', update_project, name="update_project"),
-    path('delete-project/<int:pk>', delete_project, name="delete_project")
+    path('update-project/<str:pk>/', update_project, name="update_project"),
+    path('delete-project/<str:pk>', delete_project, name="delete_project")
 ]
