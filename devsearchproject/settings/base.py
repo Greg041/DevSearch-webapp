@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'cloudinary',
-    'cloudinary-storage',
+    'cloudinary_storage',
     'projects',
     'users',
 ]
