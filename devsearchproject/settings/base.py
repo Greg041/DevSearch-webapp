@@ -39,12 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'rest_framework',
     'corsheaders',
     'cloudinary',
     'cloudinary_storage',
+    'drf_spectacular',
+
     'projects',
     'users',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -60,10 +64,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'devsearchproject.urls'
 
+
+# Third party applications settings
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -96,6 +104,13 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'devsearchproject API',
+    'DESCRIPTION': 'complete API for webapp',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 TEMPLATES = [
     {

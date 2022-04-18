@@ -1,24 +1,26 @@
+from api.projects.serializers import ProjectSerializer
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.views import APIView
+
 from projects.models import Review
-from api.projects.serializers import ProjectSerializer
 
 
-@api_view(['GET'])
-def projects_api_view(request):
-    projects = ProjectSerializer.Meta.model.objects.all()
-    projects_serialized = ProjectSerializer(projects, many=True)
-    return Response(projects_serialized.data)
-
-
-@api_view(['GET'])
-def single_project_api_view(request, pk):
-    project = ProjectSerializer.Meta.model.objects.get(id=pk)
-    project_serialized = ProjectSerializer(project)
-    return Response(project_serialized.data)
-
+class ProjectsApiView(APIView):
+    
+    """ Return a project information in case the url used has a pk filter else returns all projects published"""
+    def get(self, request, pk=None):
+        if pk is None:
+            projects = ProjectSerializer.Meta.model.objects.all()
+            projects_serialized = ProjectSerializer(projects, many=True)
+            return Response(projects_serialized.data)
+        else:
+            project = ProjectSerializer.Meta.model.objects.get(id=pk)
+            project_serialized = ProjectSerializer(project)
+            return Response(project_serialized.data)
+    
 
 @api_view(['POST', 'PUT'])
 @permission_classes([IsAuthenticated])
