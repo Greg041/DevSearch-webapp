@@ -10,13 +10,13 @@ from api.users import views as api_users_views
 
 
 urlpatterns = [
-    path('projects/', api_projects_views.projects_api_view, name="projects_api"),
-    path('projects/<int:pk>/', api_projects_views.single_project_api_view, name="single_project_api"),
-    path('projects/<int:pk>/vote/', api_projects_views.vote_and_review_project_api_view, name="vote_project_api"),
+    path('projects/', api_projects_views.ReturnProjectsApiView.as_view(), name="projects_api"),
+    path('projects/<str:pk>/', api_projects_views.ReturnProjectsApiView.as_view(), name="single_project_api"),
+    path('projects/<str:pk>/vote/', api_projects_views.VoteProjectApiView.as_view(), name="vote_project_api"),
 
     path('users/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('users/register/', api_users_views.register_user, name="register_user_api"),
+    path('users/register/', api_users_views.UserRegistrationApiView.as_view(), name="register_user_api"),
 
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger_ui'),
