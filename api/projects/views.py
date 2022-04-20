@@ -1,30 +1,50 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework import status
 from projects.models import Review, Project
-from api.projects.serializers import ProjectSerializer
+from api.projects.serializers import ProjectSerializer, CreateProjectSerializer
+from projects.models import Tag
 
 
-class ReturnProjectsApiView(APIView):
-    """ Return all projects posted on the webapp, in case a project id is sent as a parameter through the endpoint
-    returns the info of the project with such id"""
-    def get(self, request, pk=None):
-        if pk is None:
-            projects = ProjectSerializer.Meta.model.objects.all()
-            projects_serialized = ProjectSerializer(projects, many=True)
-            return Response(projects_serialized.data)
+class ReturnAllProjectsApiView(ListAPIView):
+    """ Return all projects posted on the webapp"""
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
+
+
+class CreateProjectApiView(CreateAPIView):
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        owner = request.user.profile
+        serializer = CreateProjectSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer, owner)      
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        
+    def perform_create(self, serializer, owner, tags):
+        serializer.save(owner=owner, tags=tags)
+
+
+
+class ProjectCrudApiView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def delete(self, request, *args, **kwargs):
+        if request.user.profile == self.get_object().owner:
+            return self.destroy(request, *args, **kwargs)
         else:
-            project = ProjectSerializer.Meta.model.objects.get(id=pk)
-            project_serialized = ProjectSerializer(project)
-            return Response(project_serialized.data)
+            return Response({'error': 'only the user of this project can delete it'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class VoteProjectApiView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
 
-    @permission_classes([IsAuthenticated])
     def post(self, request, pk):
         project = Project.objects.get(id=pk)
         # Getting the profile instance through the relationship between the user class and the profile class

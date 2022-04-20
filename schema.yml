@@ -7,6 +7,9 @@ paths:
   /api/projects/:
     get:
       operationId: api_projects_retrieve
+      description: |-
+        Return all projects posted on the webapp, in case a project id is sent as a parameter through the endpoint
+        returns the info of the project with such id
       tags:
       - api
       security:
@@ -18,11 +21,14 @@ paths:
   /api/projects/{id}/:
     get:
       operationId: api_projects_retrieve_2
+      description: |-
+        Return all projects posted on the webapp, in case a project id is sent as a parameter through the endpoint
+        returns the info of the project with such id
       parameters:
       - in: path
         name: id
         schema:
-          type: integer
+          type: string
         required: true
       tags:
       - api
@@ -39,33 +45,20 @@ paths:
       - in: path
         name: id
         schema:
-          type: integer
+          type: string
         required: true
       tags:
       - api
       security:
       - jwtAuth: []
+      - {}
       responses:
-        '200':
-          description: No response body
-    put:
-      operationId: api_projects_vote_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - api
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
+        '201':
           description: No response body
   /api/users/register/:
     post:
       operationId: api_users_register_create
+      description: Handles user registration
       tags:
       - api
       security:
