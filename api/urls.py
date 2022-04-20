@@ -13,6 +13,7 @@ urlpatterns = [
     path('projects/', api_projects_views.ReturnAllProjectsApiView.as_view(), name="projects_api"),
     path('projects/create/', api_projects_views.CreateProjectApiView.as_view(), name="create_project_api"),
     path('projects/<str:pk>/', api_projects_views.ProjectCrudApiView.as_view(), name="retrieve_project_api"),
+    path('projects/<str:pk>/update/', api_projects_views.ProjectCrudApiView.as_view(), name="update_project_api"),
     path('projects/<str:pk>/delete/', api_projects_views.ProjectCrudApiView.as_view(), name="delete_project_api"),
     path('projects/<str:pk>/vote/', api_projects_views.VoteProjectApiView.as_view(), name="vote_project_api"),
 

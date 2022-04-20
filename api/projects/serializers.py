@@ -15,8 +15,6 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    owner = ProfileSerializer()
-    tags = TagSerializer(many=True)
     review = serializers.SerializerMethodField('get_reviews')
     
     class Meta:
@@ -38,6 +36,8 @@ class CreateProjectSerializer(serializers.Serializer):
     source_link = serializers.CharField(max_length=2000, required=False)
 
     def create(self, validated_data):
+        tags = validated_data.pop('tags')
         instance = Project.objects.create(**validated_data)
+        instance.tags.add(*tags)
         return instance
 

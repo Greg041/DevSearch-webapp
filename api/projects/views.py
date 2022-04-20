@@ -2,6 +2,9 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework import status
+from django.db.models import Q
+from functools import reduce
+import operator
 from projects.models import Review, Project
 from api.projects.serializers import ProjectSerializer, CreateProjectSerializer
 from projects.models import Tag
@@ -14,20 +17,21 @@ class ReturnAllProjectsApiView(ListAPIView):
 
 
 class CreateProjectApiView(CreateAPIView):
-    serializer_class = ProjectSerializer
+    serializer_class = CreateProjectSerializer
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        owner = request.user.profile
-        serializer = CreateProjectSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer, owner)      
+        owner = request.user.profile
+        query = reduce(operator.or_, (Q(name__iexact=tag) for tag in request.data.get('tags')))  # Query used to search for tags recieved with case insensitive in the model Tag
+        tags = Tag.objects.filter(query)
+        self.perform_create(serializer, owner, tags)      
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         
     def perform_create(self, serializer, owner, tags):
         serializer.save(owner=owner, tags=tags)
-
 
 
 class ProjectCrudApiView(RetrieveUpdateDestroyAPIView):
@@ -40,6 +44,19 @@ class ProjectCrudApiView(RetrieveUpdateDestroyAPIView):
             return self.destroy(request, *args, **kwargs)
         else:
             return Response({'error': 'only the user of this project can delete it'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    def put(self, request, *args, **kwargs):
+        if request.user.profile == self.get_object().owner:
+            return self.update(request, *args, **kwargs)
+        else:
+            return Response({'error': 'only the user of this project can update it'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    def patch(self, request, *args, **kwargs):
+        if request.user.profile == self.get_object().owner:
+            return self.partial_update(request, *args, **kwargs)
+        else:
+            return Response({'error': 'only the user of this project can update it'}, status=status.HTTP_401_UNAUTHORIZED)
+    
 
 
 class VoteProjectApiView(CreateAPIView):
