@@ -448,9 +448,6 @@ components:
           type: string
           format: uuid
           readOnly: true
-        review:
-          type: string
-          readOnly: true
         title:
           type: string
           maxLength: 200
@@ -494,9 +491,6 @@ components:
           type: string
           format: uuid
           readOnly: true
-        review:
-          type: string
-          readOnly: true
         title:
           type: string
           maxLength: 200
@@ -536,7 +530,6 @@ components:
       required:
       - created
       - id
-      - review
       - title
     TokenObtainPair:
       type: object
