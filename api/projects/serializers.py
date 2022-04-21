@@ -15,17 +15,28 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    review = serializers.SerializerMethodField('get_reviews')
     
     class Meta:
         ordering = ['-vote_ratio']
         model = Project
         fields = '__all__'
 
-    def get_reviews(self, obj):
-        reviews = obj.review_set.all()
-        reviews_serialized = ReviewSerializer(reviews, many=True)
-        return reviews_serialized.data
+
+    def to_representation(self, instance):
+        return {
+            "id": instance.id,
+            "owner": ProfileSerializer(instance.owner).data,  # Return all values serialized from related field
+            "title": instance.title,
+            "description": instance.description,
+            "featured_image": instance.featured_image.url,
+            "demo_link": instance.demo_link,
+            "source_link": instance.source_link,
+            "tags": TagSerializer(instance.tags, many=True).data,  # Return all values serialized from related field
+            "vote_total": instance.vote_total,
+            "vote_ratio": instance.vote_ratio,
+            "created": instance.created,
+            "review": ReviewSerializer(instance.review_set.all(), many=True).data # I also want to retrieve the reviews related data
+        }
 
 
 class CreateProjectSerializer(serializers.Serializer):

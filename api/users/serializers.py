@@ -6,7 +6,7 @@ from api.models import UserProfile
 
 
 """Used to serialize data for user registration using UserProfileModel where email and username are mandatory requirements"""
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
@@ -17,3 +17,5 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+
+

@@ -6,10 +6,8 @@ info:
 paths:
   /api/projects/:
     get:
-      operationId: api_projects_retrieve
-      description: |-
-        Return all projects posted on the webapp, in case a project id is sent as a parameter through the endpoint
-        returns the info of the project with such id
+      operationId: api_projects_list
+      description: Return all projects posted on the webapp
       tags:
       - api
       security:
@@ -17,13 +15,16 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+          description: ''
   /api/projects/{id}/:
     get:
-      operationId: api_projects_retrieve_2
-      description: |-
-        Return all projects posted on the webapp, in case a project id is sent as a parameter through the endpoint
-        returns the info of the project with such id
+      operationId: api_projects_retrieve
       parameters:
       - in: path
         name: id
@@ -37,6 +38,280 @@ paths:
       - {}
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    put:
+      operationId: api_projects_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    patch:
+      operationId: api_projects_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    delete:
+      operationId: api_projects_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/projects/{id}/delete/:
+    get:
+      operationId: api_projects_delete_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    put:
+      operationId: api_projects_delete_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    patch:
+      operationId: api_projects_delete_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    delete:
+      operationId: api_projects_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/projects/{id}/update/:
+    get:
+      operationId: api_projects_update_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    put:
+      operationId: api_projects_update_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    patch:
+      operationId: api_projects_update_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    delete:
+      operationId: api_projects_update_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
           description: No response body
   /api/projects/{id}/vote/:
     post:
@@ -51,10 +326,35 @@ paths:
       - api
       security:
       - jwtAuth: []
-      - {}
       responses:
         '201':
           description: No response body
+  /api/projects/create/:
+    post:
+      operationId: api_projects_create_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateProject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateProject'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateProject'
+          description: ''
   /api/users/register/:
     post:
       operationId: api_users_register_create
@@ -123,6 +423,121 @@ paths:
           description: ''
 components:
   schemas:
+    CreateProject:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        featured_image:
+          type: string
+          format: uri
+        demo_link:
+          type: string
+          maxLength: 2000
+        source_link:
+          type: string
+          maxLength: 2000
+      required:
+      - title
+    PatchedProject:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        review:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+        featured_image:
+          type: string
+          format: uri
+          nullable: true
+        demo_link:
+          type: string
+          nullable: true
+          maxLength: 2000
+        source_link:
+          type: string
+          nullable: true
+          maxLength: 2000
+        vote_total:
+          type: integer
+          nullable: true
+        vote_ratio:
+          type: integer
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        owner:
+          type: string
+          format: uuid
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: integer
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        review:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+        featured_image:
+          type: string
+          format: uri
+          nullable: true
+        demo_link:
+          type: string
+          nullable: true
+          maxLength: 2000
+        source_link:
+          type: string
+          nullable: true
+          maxLength: 2000
+        vote_total:
+          type: integer
+          nullable: true
+        vote_ratio:
+          type: integer
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        owner:
+          type: string
+          format: uuid
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: integer
+      required:
+      - created
+      - id
+      - review
+      - title
     TokenObtainPair:
       type: object
       properties:
