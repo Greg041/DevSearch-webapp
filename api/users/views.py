@@ -1,7 +1,10 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView
-from api.users.serializers import UserSerializer, ProfileSerializer
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, ListCreateAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django.db.models.query import QuerySet
+from api.users.serializers import UserSerializer, ProfileSerializer, SkillSerializer
+from api.custom_permissions import IsOwner
 
 
 
@@ -27,4 +30,27 @@ class ListProfilesApiView(ListAPIView):
 class ProfileApiView(RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     queryset = ProfileSerializer.Meta.model.objects.all()
-    permission_classes = []
+    permission_classes = [IsAuthenticatedOrReadOnly&IsOwner]
+
+
+class ProfileSkillsApiView(ListCreateAPIView):
+    serializer_class = SkillSerializer
+    permission_class = [IsAuthenticated&IsOwner]
+    
+    def get_queryset(self):
+        queryset = self.request.user.profile.skill_set.all()
+        if isinstance(queryset, QuerySet):
+            # Ensure queryset is re-evaluated on each request.
+            queryset = self.request.user.profile.skill_set.all()
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        owner = request.user.profile
+        self.perform_create(serializer, owner)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer, owner):
+        serializer.save(owner=owner)

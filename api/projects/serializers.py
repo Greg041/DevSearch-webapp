@@ -15,18 +15,22 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    owner = serializers.SerializerMethodField()
 
     class Meta:
         ordering = ['-vote_ratio']
         model = Project
         fields = '__all__'
 
+    def get_owner(self, instance):
+        owner_serialized = ProfileSerializer(instance.owner)
+        return owner_serialized.data
 
     def to_representation(self, instance):
         return {
             "id": instance.id,
-            "owner": ProfileSerializer(instance.owner).data,  # Return all values serialized from related field
             "title": instance.title,
+            "owner": self.get_owner(instance),
             "description": instance.description,
             "featured_image": instance.featured_image.url,
             "demo_link": instance.demo_link,
