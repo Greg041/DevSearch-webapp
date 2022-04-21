@@ -11,7 +11,7 @@ from projects.models import Tag
 
 
 class ProjectsApiView(ListCreateAPIView):
-    """ Return all projects posted on the webapp"""
+    """ Return list of projects posted on the webapp and create a new project when request method == POST """
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -31,6 +31,8 @@ class ProjectsApiView(ListCreateAPIView):
 
 
 class ProjectCrudApiView(RetrieveUpdateDestroyAPIView):
+    """Retrieve project data and update or delete project if the user sending the request is equal to the project owner"""
+
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -39,19 +41,19 @@ class ProjectCrudApiView(RetrieveUpdateDestroyAPIView):
         if request.user.profile == self.get_object().owner:
             return self.destroy(request, *args, **kwargs)
         else:
-            return Response({'error': 'only the user of this project can delete it'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'only the owner of this project can delete it'}, status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, *args, **kwargs):
         if request.user.profile == self.get_object().owner:
             return self.update(request, *args, **kwargs)
         else:
-            return Response({'error': 'only the user of this project can update it'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'only the owner of this project can update it'}, status=status.HTTP_401_UNAUTHORIZED)
 
     def patch(self, request, *args, **kwargs):
         if request.user.profile == self.get_object().owner:
             return self.partial_update(request, *args, **kwargs)
         else:
-            return Response({'error': 'only the user of this project can update it'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'only the owner of this project can update it'}, status=status.HTTP_401_UNAUTHORIZED)
     
 
 

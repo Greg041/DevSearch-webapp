@@ -7,7 +7,8 @@ paths:
   /api/projects/:
     get:
       operationId: api_projects_list
-      description: Return all projects posted on the webapp
+      description: Return list of projects posted on the webapp and create a new project
+        when request method == POST
       tags:
       - api
       security:
@@ -21,6 +22,33 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Project'
+          description: ''
+    post:
+      operationId: api_projects_create
+      description: Return list of projects posted on the webapp and create a new project
+        when request method == POST
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
           description: ''
   /api/projects/{id}/:
     get:
@@ -119,200 +147,6 @@ paths:
       responses:
         '204':
           description: No response body
-  /api/projects/{id}/delete/:
-    get:
-      operationId: api_projects_delete_retrieve
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - api
-      security:
-      - jwtAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-          description: ''
-    put:
-      operationId: api_projects_delete_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Project'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Project'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Project'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-          description: ''
-    patch:
-      operationId: api_projects_delete_partial_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedProject'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedProject'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedProject'
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-          description: ''
-    delete:
-      operationId: api_projects_delete_destroy
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - api
-      security:
-      - jwtAuth: []
-      responses:
-        '204':
-          description: No response body
-  /api/projects/{id}/update/:
-    get:
-      operationId: api_projects_update_retrieve
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - api
-      security:
-      - jwtAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-          description: ''
-    put:
-      operationId: api_projects_update_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Project'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Project'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Project'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-          description: ''
-    patch:
-      operationId: api_projects_update_partial_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedProject'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedProject'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedProject'
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-          description: ''
-    delete:
-      operationId: api_projects_update_destroy
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - api
-      security:
-      - jwtAuth: []
-      responses:
-        '204':
-          description: No response body
   /api/projects/{id}/vote/:
     post:
       operationId: api_projects_vote_create
@@ -329,32 +163,6 @@ paths:
       responses:
         '201':
           description: No response body
-  /api/projects/create/:
-    post:
-      operationId: api_projects_create_create
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateProject'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/CreateProject'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateProject'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateProject'
-          description: ''
   /api/users/register/:
     post:
       operationId: api_users_register_create
@@ -423,24 +231,6 @@ paths:
           description: ''
 components:
   schemas:
-    CreateProject:
-      type: object
-      properties:
-        title:
-          type: string
-        description:
-          type: string
-        featured_image:
-          type: string
-          format: uri
-        demo_link:
-          type: string
-          maxLength: 2000
-        source_link:
-          type: string
-          maxLength: 2000
-      required:
-      - title
     PatchedProject:
       type: object
       properties:
@@ -483,7 +273,7 @@ components:
         tags:
           type: array
           items:
-            type: integer
+            type: string
     Project:
       type: object
       properties:
@@ -526,7 +316,7 @@ components:
         tags:
           type: array
           items:
-            type: integer
+            type: string
       required:
       - created
       - id

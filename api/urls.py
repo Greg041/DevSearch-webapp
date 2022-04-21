@@ -18,6 +18,9 @@ urlpatterns = [
     path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('users/register/', api_users_views.UserRegistrationApiView.as_view(), name="register_user_api"),
 
+    path('profiles/', api_users_views.ListProfilesApiView.as_view(), name='profiles_api'),
+    path('profiles/<str:pk>', api_users_views.ProfileApiView.as_view(), name='single_profile_api'),
+
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger_ui'),
     path('schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc')
