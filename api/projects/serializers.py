@@ -15,7 +15,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         ordering = ['-vote_ratio']
         model = Project

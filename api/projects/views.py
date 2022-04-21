@@ -1,6 +1,6 @@
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from rest_framework import status
 from django.db.models import Q
 from functools import reduce
@@ -10,18 +10,14 @@ from api.projects.serializers import ProjectSerializer, CreateProjectSerializer
 from projects.models import Tag
 
 
-class ReturnAllProjectsApiView(ListAPIView):
+class ProjectsApiView(ListCreateAPIView):
     """ Return all projects posted on the webapp"""
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
-
-
-class CreateProjectApiView(CreateAPIView):
-    serializer_class = CreateProjectSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = CreateProjectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         owner = request.user.profile
         query = reduce(operator.or_, (Q(name__iexact=tag) for tag in request.data.get('tags')))  # Query used to search for tags recieved with case insensitive in the model Tag
