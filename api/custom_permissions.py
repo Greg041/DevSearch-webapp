@@ -1,7 +1,9 @@
-from rest_framework.permissions import BasePermission, IsAuthenticated
+from rest_framework.permissions import BasePermission
+from users.models import Profile
 
 
 class IsOwner(BasePermission):
-    """Check is the authenticated user is the same as the user related to the model"""
+    """Check is the authenticated user is the same as the user related to endpoint id"""
     def has_permission(self, request, view):
-        return request.user == view.get_object().user if request.user.is_authenticated else True
+        profile_instance = Profile.objects.filter(id=view.kwargs.get('pk')).first()
+        return request.user == profile_instance.user if request.user.is_authenticated else True

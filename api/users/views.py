@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from django.db.models.query import QuerySet
 from api.users.serializers import UserSerializer, ProfileSerializer, SkillSerializer
 from api.custom_permissions import IsOwner
-
+from users.models import Profile
 
 
 class UserRegistrationApiView(CreateAPIView):
@@ -35,13 +35,14 @@ class ProfileApiView(RetrieveUpdateAPIView):
 
 class ProfileSkillsApiView(ListCreateAPIView):
     serializer_class = SkillSerializer
-    permission_class = [IsAuthenticated&IsOwner]
+    permission_classes = [IsAuthenticated&IsOwner]
     
     def get_queryset(self):
-        queryset = self.request.user.profile.skill_set.all()
+        profile_instance = Profile.objects.filter(id=self.kwargs.get('pk')).first()
+        queryset = profile_instance.skill_set.all() if profile_instance else QuerySet 
         if isinstance(queryset, QuerySet):
             # Ensure queryset is re-evaluated on each request.
-            queryset = self.request.user.profile.skill_set.all()
+            queryset = profile_instance.skill_set.all() if profile_instance else QuerySet 
         return queryset
 
     def create(self, request, *args, **kwargs):
