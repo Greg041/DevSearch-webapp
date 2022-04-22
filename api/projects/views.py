@@ -31,30 +31,34 @@ class ProjectsApiView(ListCreateAPIView):
 
 
 class ProjectCrudApiView(RetrieveUpdateDestroyAPIView):
-    """Retrieve project data and update or delete project if the user sending the request is equal to the project owner"""
-
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def delete(self, request, *args, **kwargs):
+        """Delete a the project whose id is sent through the endpoint only if the authenticated user is the owner of the project"""
         if request.user.profile == self.get_object().owner:
             return self.destroy(request, *args, **kwargs)
         else:
             return Response({'error': 'only the owner of this project can delete it'}, status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, *args, **kwargs):
+        """Update a the project whose id is sent through the endpoint only if the authenticated user is the owner of the project"""
         if request.user.profile == self.get_object().owner:
             return self.update(request, *args, **kwargs)
         else:
             return Response({'error': 'only the owner of this project can update it'}, status=status.HTTP_401_UNAUTHORIZED)
 
     def patch(self, request, *args, **kwargs):
+        """Update a the project whose id is sent through the endpoint only if the authenticated user is the owner of the project"""
         if request.user.profile == self.get_object().owner:
             return self.partial_update(request, *args, **kwargs)
         else:
             return Response({'error': 'only the owner of this project can update it'}, status=status.HTTP_401_UNAUTHORIZED)
-    
+
+    def get(self, request, *args, **kwargs):
+        """Retrieve the project data whose id is sent through the endpoint"""
+        return super().get(request, *args, **kwargs)
 
 
 class VoteProjectApiView(CreateAPIView):

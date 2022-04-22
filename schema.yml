@@ -4,6 +4,268 @@ info:
   version: 1.0.0
   description: complete API for webapp
 paths:
+  /api/profiles/:
+    get:
+      operationId: api_profiles_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+          description: ''
+  /api/profiles/{id}/:
+    get:
+      operationId: api_profiles_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    put:
+      operationId: api_profiles_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Profile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Profile'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    patch:
+      operationId: api_profiles_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProfile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProfile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProfile'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+  /api/profiles/{id}/skills/:
+    get:
+      operationId: api_profiles_skills_list
+      description: |-
+        Get the skills for the user id send through pk field and only if the user authenticated who send the request
+        is the same as the user whose id is send, if the user doesn't have skills then a empty list is sent as a Response.
+
+        Create a skill for the user id send through pk field only if the user authenticated who send the request
+        is the same as the user whose id is send
+
+        return status code 201 when success
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Skill'
+          description: ''
+    post:
+      operationId: api_profiles_skills_create
+      description: |-
+        Get the skills for the user id send through pk field and only if the user authenticated who send the request
+        is the same as the user whose id is send, if the user doesn't have skills then a empty list is sent as a Response.
+
+        Create a skill for the user id send through pk field only if the user authenticated who send the request
+        is the same as the user whose id is send
+
+        return status code 201 when success
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Skill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Skill'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+          description: ''
+  /api/profiles/{id}/skills/{id}/:
+    get:
+      operationId: api_profiles_skills_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+          description: ''
+    put:
+      operationId: api_profiles_skills_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Skill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Skill'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+          description: ''
+    patch:
+      operationId: api_profiles_skills_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSkill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSkill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSkill'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+          description: ''
+    delete:
+      operationId: api_profiles_skills_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/projects/:
     get:
       operationId: api_projects_list
@@ -53,6 +315,8 @@ paths:
   /api/projects/{id}/:
     get:
       operationId: api_projects_retrieve
+      description: Retrieve project data and update or delete project if the user
+        sending the request is equal to the project owner
       parameters:
       - in: path
         name: id
@@ -73,6 +337,8 @@ paths:
           description: ''
     put:
       operationId: api_projects_update
+      description: Retrieve project data and update or delete project if the user
+        sending the request is equal to the project owner
       parameters:
       - in: path
         name: id
@@ -104,6 +370,8 @@ paths:
           description: ''
     patch:
       operationId: api_projects_partial_update
+      description: Retrieve project data and update or delete project if the user
+        sending the request is equal to the project owner
       parameters:
       - in: path
         name: id
@@ -134,6 +402,8 @@ paths:
           description: ''
     delete:
       operationId: api_projects_destroy
+      description: Retrieve project data and update or delete project if the user
+        sending the request is equal to the project owner
       parameters:
       - in: path
         name: id
@@ -166,15 +436,31 @@ paths:
   /api/users/register/:
     post:
       operationId: api_users_register_create
-      description: Handles user registration
+      description: Post a new user
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
       security:
       - jwtAuth: []
       - {}
       responses:
-        '200':
-          description: No response body
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
   /api/users/token/:
     post:
       operationId: api_users_token_create
@@ -231,6 +517,71 @@ paths:
           description: ''
 components:
   schemas:
+    PatchedProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        skills:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 200
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 500
+        username:
+          type: string
+          nullable: true
+          maxLength: 200
+        location:
+          type: string
+          nullable: true
+          maxLength: 200
+        short_intro:
+          type: string
+          nullable: true
+          maxLength: 200
+        bio:
+          type: string
+          nullable: true
+        profile_image:
+          type: string
+          format: uri
+          nullable: true
+        social_github:
+          type: string
+          nullable: true
+          maxLength: 200
+        social_twitter:
+          type: string
+          nullable: true
+          maxLength: 200
+        social_linkedin:
+          type: string
+          nullable: true
+          maxLength: 200
+        social_youtube:
+          type: string
+          nullable: true
+          maxLength: 200
+        personal_website:
+          type: string
+          nullable: true
+          maxLength: 200
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: integer
+          nullable: true
     PatchedProject:
       type: object
       properties:
@@ -238,6 +589,9 @@ components:
           type: string
           format: uuid
           readOnly: true
+        owner:
+          type: string
+          readOnly: true
         title:
           type: string
           maxLength: 200
@@ -266,14 +620,93 @@ components:
           type: string
           format: date-time
           readOnly: true
-        owner:
-          type: string
-          format: uuid
-          nullable: true
         tags:
           type: array
           items:
-            type: string
+            type: integer
+    PatchedSkill:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        skills:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 200
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 500
+        username:
+          type: string
+          nullable: true
+          maxLength: 200
+        location:
+          type: string
+          nullable: true
+          maxLength: 200
+        short_intro:
+          type: string
+          nullable: true
+          maxLength: 200
+        bio:
+          type: string
+          nullable: true
+        profile_image:
+          type: string
+          format: uri
+          nullable: true
+        social_github:
+          type: string
+          nullable: true
+          maxLength: 200
+        social_twitter:
+          type: string
+          nullable: true
+          maxLength: 200
+        social_linkedin:
+          type: string
+          nullable: true
+          maxLength: 200
+        social_youtube:
+          type: string
+          nullable: true
+          maxLength: 200
+        personal_website:
+          type: string
+          nullable: true
+          maxLength: 200
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: integer
+          nullable: true
+      required:
+      - created
+      - id
+      - skills
     Project:
       type: object
       properties:
@@ -281,6 +714,9 @@ components:
           type: string
           format: uuid
           readOnly: true
+        owner:
+          type: string
+          readOnly: true
         title:
           type: string
           maxLength: 200
@@ -309,18 +745,32 @@ components:
           type: string
           format: date-time
           readOnly: true
-        owner:
-          type: string
-          format: uuid
-          nullable: true
         tags:
           type: array
           items:
-            type: string
+            type: integer
       required:
       - created
       - id
+      - owner
       - title
+    Skill:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+      required:
+      - id
+      - name
     TokenObtainPair:
       type: object
       properties:
@@ -353,6 +803,69 @@ components:
       required:
       - access
       - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          maxLength: 128
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+        groups:
+          type: array
+          items:
+            type: integer
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+          description: Specific permissions for this user.
+      required:
+      - email
+      - id
+      - password
+      - username
   securitySchemes:
     jwtAuth:
       type: http

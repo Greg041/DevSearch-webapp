@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from projects.models import Project, Tag, Review
-from api.users.serializers import ProfileSerializer
+
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,22 +15,18 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    owner = serializers.SerializerMethodField()
 
     class Meta:
         ordering = ['-vote_ratio']
         model = Project
         fields = '__all__'
 
-    def get_owner(self, instance):
-        owner_serialized = ProfileSerializer(instance.owner)
-        return owner_serialized.data
 
     def to_representation(self, instance):
         return {
             "id": instance.id,
             "title": instance.title,
-            "owner": self.get_owner(instance),
+            "owner": instance.owner.id,
             "description": instance.description,
             "featured_image": instance.featured_image.url,
             "demo_link": instance.demo_link,

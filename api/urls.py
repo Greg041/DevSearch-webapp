@@ -21,6 +21,10 @@ urlpatterns = [
     path('profiles/', api_users_views.ListProfilesApiView.as_view(), name='profiles_api'), # Used only to return profiles list, the creation of a profile is made automatically when a user is registered
     path('profiles/<str:pk>/', api_users_views.ProfileApiView.as_view(), name='single_profile_api'),
     path('profiles/<str:pk>/skills/', api_users_views.ProfileSkillsApiView.as_view(), name="profile_skills_api"),  # Return and create skills of the authenticated profile
+    path('profiles/<str:pk>/skills/<str:id>/', api_users_views.ProfileSkillRUDApiView.as_view(), name="profile_skill_rud_api"),
+    path('profiles/<str:pk>/messages/', api_users_views.MessagesApiView.as_view(), name="profile_messages_api"),
+    path('profiles/<str:pk>/messages/<str:id>', api_users_views.SingleMessageApiView.as_view(), name="profile_single_message_api"),
+    path('sent-message/<str:pk>/', api_users_views.SendMessageApiView.as_view(), name="sent_message_api"),
 
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger_ui'),
