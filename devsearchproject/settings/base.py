@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     'drf_spectacular',
+    'django_rest_passwordreset',
 
     'projects',
     'users',

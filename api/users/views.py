@@ -1,10 +1,12 @@
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django.db.models.query import QuerySet
 from api.users.serializers import UserSerializer, ProfileSerializer, SkillSerializer, MessageSerializer
 from api.custom_permissions import IsOwner
+from django.contrib.sessions.models import Session
 from users.models import Profile
 
 
