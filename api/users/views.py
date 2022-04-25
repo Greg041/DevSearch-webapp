@@ -11,6 +11,8 @@ from users.models import Profile
 
 
 class UserRegistrationApiView(CreateAPIView):
+    """Register a new user in the database and automatically creates a profile for him with the basic data 
+    sent to registration"""
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
@@ -25,8 +27,10 @@ class UserRegistrationApiView(CreateAPIView):
 
 
 class ListProfilesApiView(ListAPIView):
+    """Return the list of all profiles registered in the webpage"""
     serializer_class = ProfileSerializer
     queryset = ProfileSerializer.Meta.model.objects.all()
+    
 
 
 class ProfileApiView(RetrieveUpdateAPIView):
@@ -34,18 +38,36 @@ class ProfileApiView(RetrieveUpdateAPIView):
     queryset = ProfileSerializer.Meta.model.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly&IsOwner]
 
+    def get(self, request, *args, **kwargs):
+        """Return the all the public data for the profile whose id is sent through the endpoint"""
+        return super().get(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        """Update the data for the profile whose id sent only if the user is authenticated
+        and is the owner of the profile"""
+        return super().put(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        """Update the data for the profile whose id sent only if the user is authenticated
+        and is the owner of the profile"""
+        return super().patch(request, *args, **kwargs)
+
 
 class ProfileSkillsApiView(ListCreateAPIView):
-    """Get the skills for the user id send through pk field and only if the user authenticated who send the request
-    is the same as the user whose id is send, if the user doesn't have skills then a empty list is sent as a Response.
-    
-    Create a skill for the user id send through pk field only if the user authenticated who send the request
-    is the same as the user whose id is send
-    
-    return status code 201 when success"""
-
     serializer_class = SkillSerializer
     permission_classes = [IsAuthenticated&IsOwner]
+
+    def get(self, request, *args, **kwargs):
+        """Get the skills for the user id send through pk field and only if the user authenticated who send the request
+            is the same as the user whose id is send, if the user doesn't have skills then a empty list is sent as a Response."""
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """Create a skill for the user id send through pk field only if the user authenticated who send the request
+        is the same as the user whose id is send
+    
+        return status code 201 when success"""
+        return super().post(request, *args, **kwargs)
     
     def get_queryset(self):
         queryset = self.request.user.profile.skill_set.all()
@@ -68,10 +90,24 @@ class ProfileSkillsApiView(ListCreateAPIView):
 
 
 class ProfileSkillRUDApiView(RetrieveUpdateDestroyAPIView):
-    
     serializer_class = SkillSerializer
     permission_classes = [IsAuthenticated&IsOwner]
     lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        """Retrieve the data from a specific skill whose is sent through the URL only if the 
+        user is authenticated and is owner of the skill"""
+        return super().get(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        """Update the data for a specific skill whose is sent through the URL only if the 
+        user is authenticated and is owner of the skill"""
+        return super().put(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        """Update the data for a specific skill whose is sent through the URL only if the 
+        user is authenticated and is owner of the skill"""
+        return super().patch(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = self.request.user.profile.skill_set.all()
@@ -81,14 +117,17 @@ class ProfileSkillRUDApiView(RetrieveUpdateDestroyAPIView):
         return queryset
 
     def destroy(self, request, *args, **kwargs):
+        """Deletes the data for a specific skill whose is sent through the URL only if the 
+        user is authenticated and is owner of the skill"""
         response = super().destroy(request, *args, **kwargs)
         response.data = {'success': "The skill was deleted successfully"}
         return response
 
 
 class MessagesApiView(ListAPIView):
+    """Return all messages received for the user authenticated"""
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated&IsOwner]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = self.request.user.profile.recipient_messages.all()
@@ -103,8 +142,24 @@ class SingleMessageApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated&IsOwner]
     lookup_field = 'id'
 
+    def get(self, request, *args, **kwargs):
+        """Return data for the message whose id is sent in the URL only if the user authenticated
+        is the owner of the received message"""
+        return super().get(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        """Updates data for the message whose id is sent in the URL only if the user authenticated
+        is the owner of the received message"""
+        return super().put(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        """Updates data for the message whose id is sent in the URL only if the user authenticated
+        is the owner of the received message"""
+        return super().patch(request, *args, **kwargs)
+
 
 class SendMessageApiView(CreateAPIView):
+    """Sents a message from the authenticated user to the user whose id is provided in the URL"""
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
 

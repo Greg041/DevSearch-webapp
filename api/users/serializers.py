@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from drf_spectacular.utils import extend_schema_field
 from api.projects.serializers import ProjectSerializer
 from users.models import Profile, Skill, Message
 
@@ -29,10 +30,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = "__all__"
 
+    @extend_schema_field(serializers.StringRelatedField)
     def get_skills(self, instance):
         skills_serialized = SkillSerializer(instance=instance.skill_set.all(), many=True)
         return skills_serialized.data
 
+    @extend_schema_field(serializers.StringRelatedField)
     def get_projects(self, instance):
         projects_serialized = ProjectSerializer(instance=instance.project_set.all(), many=True)
         return projects_serialized.data

@@ -11,7 +11,7 @@ class TagSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = '__all__'
+        exclude = ['owner', 'project']
 
 
 class ProjectSerializer(serializers.ModelSerializer):

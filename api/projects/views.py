@@ -5,8 +5,8 @@ from rest_framework import status
 from django.db.models import Q
 from functools import reduce
 import operator
-from projects.models import Review, Project
-from api.projects.serializers import ProjectSerializer, CreateProjectSerializer
+from projects.models import Project
+from api.projects.serializers import ProjectSerializer, CreateProjectSerializer, ReviewSerializer
 from projects.models import Tag
 
 
@@ -15,6 +15,14 @@ class ProjectsApiView(ListCreateAPIView):
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, *args, **kwargs):
+        """Return list of all projects in database paginated through page number validation in the sent in URL"""
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """ Post a new project if the user is authenticated with the data received """
+        return super().post(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         serializer = CreateProjectSerializer(data=request.data)
@@ -62,21 +70,24 @@ class ProjectCrudApiView(RetrieveUpdateDestroyAPIView):
 
 
 class VoteProjectApiView(CreateAPIView):
+    """ Create a review for a project whose id is sent in the URL and only if the user authenticated is not the owner
+    of the project """
     permission_classes = [IsAuthenticated]
+    serializer_class = ReviewSerializer
 
-    def post(self, request, pk):
-        project = Project.objects.get(id=pk)
+    def create(self, request, *args, **kwargs):
+        project = Project.objects.get(id=kwargs['pk'])
         # Getting the profile instance through the relationship between the user class and the profile class
         user = request.user.profile
-        review, created = Review.objects.get_or_create(owner=user, project=project)
         if user == project.owner:
-            return Response({'error': "You can't vote your own project"})
-        elif request.data.get('value'):
-            review.value = request.data['value']
-            review.body = request.data['body'] if request.data.get('body') else ''
-            review.save()
-            project.get_votes_total
-            project_serialized = ProjectSerializer(project)
-            return Response(project_serialized.data, status=status.HTTP_201_CREATED)
+            return Response({'error': "You can't vote your own project"}, status=status.HTTP_403_FORBIDDEN)
         else:
-            return Response({'error': 'You must provide a vote value for the review and a review comment(optional)'}, status=status.HTTP_400_BAD_REQUEST)
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer, user, project)
+            project.get_votes_total
+            return Response({'success': "Review was successfully submitted"}, status=status.HTTP_201_CREATED)
+
+    def perform_create(self, serializer, user, project):
+        serializer.save(owner=user, project=project)
+
