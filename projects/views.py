@@ -6,7 +6,6 @@ from .forms import ProjectForm, ReviewForm
 from .utils import search_projects, paginate_projects
 
 
-# Create your views here.
 def projects(request):
     if request.GET.get('search'):
         projects, query = search_projects(request)

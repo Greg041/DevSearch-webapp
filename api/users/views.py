@@ -33,11 +33,8 @@ class LogoutApiView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        token = request.auth
         RefreshToken.for_user(request.user)
-        token.blacklist()
         return Response(status=status.HTTP_205_RESET_CONTENT)
-
 
 
 class ListProfilesApiView(ListAPIView):
