@@ -1,13 +1,16 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.db.models import Q
 from django.db.models.query import QuerySet
+from django.db.models.aggregates import Count
+
 from api.users.serializers import UserSerializer, ProfileSerializer, SkillSerializer, MessageSerializer
 from api.custom_permissions import IsOwner
-from django.contrib.sessions.models import Session
 from users.models import Profile
+from api.custom_pagination import CustomPageNumberPagination
 
 
 class UserRegistrationApiView(CreateAPIView):
@@ -26,12 +29,37 @@ class UserRegistrationApiView(CreateAPIView):
             return user_data
 
 
+class LogoutApiView(GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        token = request.auth
+        RefreshToken.for_user(request.user)
+        token.blacklist()
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+
+
+
 class ListProfilesApiView(ListAPIView):
-    """Return the list of all profiles registered in the webpage"""
+    """Return the list of all profiles registered in the webpage, paginate the results by 3"""
     serializer_class = ProfileSerializer
     queryset = ProfileSerializer.Meta.model.objects.all()
-    
+    pagination_class = CustomPageNumberPagination
 
+    def get_queryset(self):
+        if self.request.query_params.get('search'):
+            query = self.request.query_params['search']
+            queryset = Profile.objects.filter(Q(name__icontains=query) | Q(short_intro__icontains=query)).distinct().exclude(profile_image='').annotate(projects_number=Count('project')).order_by('-projects_number')
+            if not queryset:
+                queryset = Profile.objects.get_profiles_by_skills(query).exclude(profile_image='').annotate(projects_number=Count('project')).order_by('-projects_number')
+        else:
+            queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            # Ensure queryset is re-evaluated on each request.
+            queryset = queryset.all()
+        return queryset
+
+    
 
 class ProfileApiView(RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
