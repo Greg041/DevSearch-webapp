@@ -1,8 +1,12 @@
 import cloudinary
 import os
 from .base import *
+from dotenv import load_dotenv
 
-
+local_env_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(local_env_file):
+    load_dotenv(local_env_file)
+    
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG', '') != 'False'
