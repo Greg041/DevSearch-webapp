@@ -1,8 +1,14 @@
+# Django imports
 from django import forms
+# Local imports
 from .models import Project, Review
+# Third party imports
+from cloudinary.forms import CloudinaryFileField
 
 
 class ProjectForm(forms.ModelForm):
+    featured_image = CloudinaryFileField(options={'tags': 'project-image', 'format': 'png'})
+    
     class Meta:
         model = Project
         fields = ['title', 'featured_image', 'description', 'demo_link', 'source_link']

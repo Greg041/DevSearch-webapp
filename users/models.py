@@ -1,6 +1,7 @@
 # Django imports
 from django.db import models
 from django.conf import settings
+from django.templatetags.static import static
 # Third party imports
 import uuid
 from cloudinary.models import CloudinaryField
@@ -37,11 +38,9 @@ class Profile(models.Model):
 
     @property
     def get_image_url(self):
-        try:
-            image_url = self.profile_image.url
-        except:
-            image_url = ''
-        return image_url
+        if self.profile_image:
+            return self.profile_image.url
+        return static("images/no-user-image.png")
 
 
 class Skill(models.Model):

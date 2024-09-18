@@ -3,16 +3,9 @@ import os
 from .base import *
 
 
-DEBUG = False
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUD_NAME'),
-    'API_KEY': os.getenv('API_KEY'),
-    'API_SECRET': os.getenv('API_SECRET')
-}
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
+DEBUG = os.getenv('DEBUG', '') != 'False'
 
 cloudinary.config(
     cloud_name = os.getenv('CLOUD_NAME'),

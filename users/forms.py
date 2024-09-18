@@ -1,7 +1,11 @@
+# Django imports
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm
+# Local imports
 from .models import Profile, Skill, Message
+# Third party imports
+from cloudinary.forms import CloudinaryFileField
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -19,6 +23,8 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class ProfileForm(ModelForm):
+    profile_image = CloudinaryFileField(options={'tags': 'profile-image', 'format': 'png'})
+    
     class Meta:
         model = Profile
         exclude = ['user']
