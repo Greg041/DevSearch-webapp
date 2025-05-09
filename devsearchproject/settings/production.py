@@ -25,7 +25,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['devsearch-webapp-production.up.railway.app']
 
 DATABASES = {
     'default': {
@@ -37,3 +37,5 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
     }
 }
+
+CSRF_TRUSTED_ORIGINS = ['https://web-production-3640.up.railway.app']
