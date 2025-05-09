@@ -37,5 +37,3 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
     }
 }
-
-STATIC_ROOT = BASE_DIR / 'static'
