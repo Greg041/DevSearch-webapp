@@ -130,8 +130,6 @@ ruamel-yaml-clib==0.2.6
     # via
     #   devsearch-webapp (pyproject.toml)
     #   ruamel-yaml
-setuptools==80.3.1
-    # via gunicorn
 six==1.16.0
     # via
     #   devsearch-webapp (pyproject.toml)
