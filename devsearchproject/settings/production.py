@@ -3,11 +3,12 @@ import os
 from .base import *
 from dotenv import load_dotenv
 
-local_env_file = os.path.join(BASE_DIR, ".env")
+
+local_env_file = os.path.join(BASE_DIR, f".env/.env.{os.getenv('APP_ENV')}")
 if os.path.isfile(local_env_file):
     load_dotenv(local_env_file)
-    
-SECRET_KEY = os.getenv('SECRET_KEY')
+
+SECRET_KEY = getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG', '') != 'False'
 
@@ -24,6 +25,15 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-ALLOWED_HOSTS = ['thehaseo.pythonanywhere.com', '127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS = ['https://thehaseo.pythonanywhere.com']
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+    }
+}

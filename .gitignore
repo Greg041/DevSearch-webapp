@@ -4,4 +4,7 @@ Pipfile.lock
 **/migrations/*
 !**/migrations/__init__.py
 db.sqlite3
-.env
+.env/*
+!.env/.env.template
+.ruff_cache
+.venv
