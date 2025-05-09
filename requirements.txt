@@ -36,7 +36,6 @@ django==4.0.3
     # via
     #   devsearch-webapp (pyproject.toml)
     #   django-cors-headers
-    #   django-postgresql
     #   djangorestframework
     #   djangorestframework-simplejwt
     #   drf-spectacular
@@ -44,8 +43,6 @@ django==4.0.3
 django-cloudinary-storage==0.3.0
     # via devsearch-webapp (pyproject.toml)
 django-cors-headers==3.11.0
-    # via devsearch-webapp (pyproject.toml)
-django-postgresql==0.0.3
     # via devsearch-webapp (pyproject.toml)
 django-rest-passwordreset==1.4.1
     # via devsearch-webapp (pyproject.toml)

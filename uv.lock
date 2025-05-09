@@ -89,7 +89,6 @@ dependencies = [
     { name = "django" },
     { name = "django-cloudinary-storage" },
     { name = "django-cors-headers" },
-    { name = "django-postgresql" },
     { name = "django-rest-passwordreset" },
     { name = "django-simple-history" },
     { name = "djangorestframework" },
@@ -136,7 +135,6 @@ requires-dist = [
     { name = "django", specifier = "==4.0.3" },
     { name = "django-cloudinary-storage", specifier = "==0.3.0" },
     { name = "django-cors-headers", specifier = "==3.11.0" },
-    { name = "django-postgresql", specifier = "==0.0.3" },
     { name = "django-rest-passwordreset", specifier = "==1.4.1" },
     { name = "django-simple-history", specifier = "==3.0.0" },
     { name = "djangorestframework", specifier = "==3.13.1" },
@@ -217,15 +215,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/3e/39/0058ff0bd2cb7aacf
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5a/8d/678814a8ffa62650ee8c4e8a0d8704f43462473c2e7577187d4de961afe4/django_cors_headers-3.11.0-py3-none-any.whl", hash = "sha256:a22be2befd4069c4fc174f11cf067351df5c061a3a5f94a01650b4e928b0372b", size = 12952, upload-time = "2022-01-10T16:52:23.244Z" },
 ]
-
-[[package]]
-name = "django-postgresql"
-version = "0.0.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/cf/06/ddf2049ac31bbcc40d98c0215c013ef3207c4a63e27c689c128c3c47db86/django-postgresql-0.0.3.tar.gz", hash = "sha256:981b3b98b91673d9e6aca1be4b68f42779c6947e8db52d1ea69876cd96972f2e", size = 22566, upload-time = "2015-08-06T15:02:28.407Z" }
 
 [[package]]
 name = "django-rest-passwordreset"
