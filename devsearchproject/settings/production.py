@@ -38,4 +38,4 @@ DATABASES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = ['https://web-production-3640.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://devsearch-webapp-production.up.railway.app']
